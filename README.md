@@ -1,8 +1,9 @@
 # EECS-581-Extracting-IPv4 Prompts Used 
-# AI model used: Claude - Sonnet 5 
-# Dates the model was used: 9/23, 9/25
-# The entirety of this code was AI-generated, however I went through and thororughly understand
-# every line of code written, and have tested/debugged the code to ensure it works at intended.
+# AI model used
+Claude - Sonnet 5 
+# Dates the model was used
+9/23, 9/25
+The entirety of this code was AI-generated, however I went through and thororughly understand every line of code written, and have tested/debugged the code to ensure it works as intended.
 
 # Turn #1
 I need a C function called extractIPv4 that finds an IPv4 address (and port if there is one) somewhere in a line of text and returns it. Can't use atoi/strtol/sscanf/inet_pton/regex or anything like that, has to be done by hand. Also write a main that loops asking for input until the user types END, and prints the result each time.
