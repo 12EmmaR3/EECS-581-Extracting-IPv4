@@ -1,7 +1,12 @@
-/* 
- * Reads lines of text from the user and extracts a single valid IPv4
- * address (optionally followed by a :port) embedded anywhere in the line.
+/* extract_ipv4.c
  *
+ * No string-to-number library functions, no inet_* functions, and no
+ * regex are used anywhere in this file.
+ * 
+ * To run this file, run the following commands
+ * gcc -Wall -Wextra -std=c11 -o ip ip.c
+ * to run the already implemented test case file, run ./ip < test_cases.txt
+ * OR to enter your own strings to test, run ./ip
  */
 
 #include <stdio.h>
@@ -26,7 +31,7 @@ static int parseField(const char* tok, size_t len, size_t* i, int maxLen,
         val = val * 10 + (tok[*i] - '0');
         digitCount++;
         (*i)++;
-        /* Stop  once we have too many digits; the field
+        /* Bail out once we unambiguously have too many digits; the field
          * is invalid regardless, so stop accumulating (avoids overflow). */
         if (digitCount > maxLen) {
             return 0;
@@ -47,10 +52,9 @@ static int parseField(const char* tok, size_t len, size_t* i, int maxLen,
     return 1;
 }
 
-/* Parses a full candidate token 
- * The token must consist ONLY of
- * digits, '.', and ':' ]
- * and must match therequired grammar */
+/* Parses a full candidate token, the token must consist ONLY of
+ * digits, '.', and ':', and must match the grammar in its entirety -- no partial
+ * or matches are allowed. */
 static int parseAddressToken(const char* tok, size_t len,
                               unsigned long* outAddress, int* outPort) {
     size_t i = 0;
@@ -95,9 +99,7 @@ static int isAddrChar(char c) {
     return isdigit((unsigned char)c) || c == '.' || c == ':';
 }
 
-/* ---------------------------------------------------------------------
- * Public API
- * ------------------------------------------------------------------- */
+
 int extractIPv4(const char* str, unsigned long* outAddress, int* outPort) {
     size_t n = strlen(str);
     size_t pos = 0;
@@ -136,7 +138,7 @@ int extractIPv4(const char* str, unsigned long* outAddress, int* outPort) {
  * ------------------------------------------------------------------- */
 static void printResult(int found, unsigned long address, int port) {
     if (!found) {
-        printf("No valid IPv4 address found.\n");
+        printf("Invalid input: no valid IPv4 address found\n");
         return;
     }
 
@@ -158,7 +160,7 @@ int main(void) {
     char line[LINE_BUF_SIZE];
 
     while (1) {
-        printf("Enter a line of text (or END to quit): ");
+        printf("Enter a string (or 'END' to quit): ");
         fflush(stdout);
 
         if (!fgets(line, sizeof(line), stdin)) {
